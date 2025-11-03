@@ -128,6 +128,24 @@ namespace MyApp.Controllers
                 return NotFound();
             }
 
+            // Remove related ItemClients first (many-to-many relationship)
+            var itemClients = await _context.ItemClients.Where(ic => ic.ItemId == item.Id).ToListAsync();
+            if (itemClients.Any())
+            {
+                _context.ItemClients.RemoveRange(itemClients);
+            }
+
+            // Remove related SerialNumber (one-to-one relationship)
+            var serial = await _context.SerialNumbers.FirstOrDefaultAsync(s => s.ItemId == item.Id);
+            if (serial != null)
+            {
+                _context.SerialNumbers.Remove(serial);
+            }
+
+            // Save changes for related entities first
+            await _context.SaveChangesAsync();
+
+            // Now remove the item
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
 

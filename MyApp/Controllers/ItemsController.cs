@@ -93,7 +93,16 @@ namespace MyApp.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _context.Items
+                .Include(i => i.SerialNumber)
+                .Include(i => i.Category)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
             return View(item);
         }
         [HttpPost, ActionName("Delete")]
@@ -102,17 +111,28 @@ namespace MyApp.Controllers
             var item = await _context.Items.FindAsync(id);
             if (item != null)
             {
-                // Remove related SerialNumber first
+                // Remove related ItemClients first (many-to-many relationship)
+                var itemClients = await _context.ItemClients.Where(ic => ic.ItemId == item.Id).ToListAsync();
+                if (itemClients.Any())
+                {
+                    _context.ItemClients.RemoveRange(itemClients);
+                }
+
+                // Remove related SerialNumber (one-to-one relationship)
                 var serial = await _context.SerialNumbers.FirstOrDefaultAsync(s => s.ItemId == item.Id);
                 if (serial != null)
                 {
                     _context.SerialNumbers.Remove(serial);
                 }
+
+                // Save changes for related entities first
+                await _context.SaveChangesAsync();
+
+                // Now remove the item
                 _context.Items.Remove(item);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");
         }
-
     }
 }
