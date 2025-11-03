@@ -6,14 +6,16 @@ This project is a comprehensive learning exercise for ASP.NET Core MVC, built wi
 
 ## Overview
 
-This project is designed to help you learn and practice ASP.NET Core MVC development. It covers the full stack of a modern .NET web application, including:
+This is a full-stack application combining ASP.NET Core MVC backend with an Angular frontend. It demonstrates modern web development practices including:
 
-- MVC architecture
-- Razor views
-- Entity Framework Core (EF Core)
-- Code-First and Database-First approaches
-- CRUD operations
+- **Backend**: ASP.NET Core MVC with .NET 9
+- **Frontend**: Angular 20 with Tailwind CSS
+- MVC architecture & RESTful API design
+- Entity Framework Core (EF Core) Code-First
+- Full CRUD operations (Create, Read, Update, Delete)
 - Entity relationships (One-to-One, One-to-Many, Many-to-Many)
+- CORS configuration for API communication
+- Responsive UI with Tailwind CSS
 
 ---
 
@@ -37,13 +39,31 @@ This project is designed to help you learn and practice ASP.NET Core MVC develop
 
 ## File Structure
 
-- `Controllers/`: Contains controllers like `ItemsController` and `HomeController`.
-- `Models/`: Contains data models (entities) such as `Item`, `Category`, `Client`, `SerialNumber`, and view models.
-- `Data/`: Contains `MyAppContext`, the EF Core DbContext.
-- `Migrations/`: Contains EF Core migration files for database schema changes.
-- `Views/`: Contains Razor views for each controller and action.
-- `wwwroot/`: Static files (CSS, JS, images, libraries).
-- `appsettings.json`: Configuration, including database connection strings.
+### Backend (`MyApp/`)
+
+- `Controllers/`:
+  - MVC Controllers: `ItemsController`, `HomeController` (Razor views)
+  - API Controllers: `ItemsApiController`, `CategoriesApiController`, `ClientsApiController` (REST API)
+- `Models/`: Data models (entities) such as `Item`, `Category`, `Client`, `SerialNumber`, and view models
+- `Data/`: `MyAppContext` - EF Core DbContext
+- `Migrations/`: EF Core migration files for database schema changes
+- `Views/`: Razor views for MVC controllers
+- `wwwroot/`: Static files (CSS, JS, images, libraries)
+- `appsettings.json`: Configuration, including database connection strings
+- `Program.cs`: Application configuration with CORS and JSON serialization
+
+### Frontend (`frontend/frontend/`)
+
+- `src/app/components/`: Angular components
+  - `items-list/`: Display all items in a table
+  - `item-form/`: Create and edit items form
+- `src/app/services/`: HTTP services for API communication
+  - `item.service.ts`: Item CRUD operations
+  - `category.service.ts`: Category data
+  - `client.service.ts`: Client data
+- `src/app/models/`: TypeScript interfaces matching backend models
+- `tailwind.config.js`: Tailwind CSS configuration
+- `src/styles.css`: Global styles with Tailwind directives
 
 ---
 
@@ -147,9 +167,31 @@ This project is designed to help you learn and practice ASP.NET Core MVC develop
 
 ## API Endpoints
 
-This project exposes several endpoints via its controllers. The main endpoints are provided by `ItemsController` and `HomeController`.
+### REST API Controllers
 
-### ItemsController Endpoints
+#### Items API (`/api/ItemsApi`)
+
+- `GET /api/ItemsApi` — Get all items with related data (Category, SerialNumber, Clients)
+- `GET /api/ItemsApi/{id}` — Get a single item by ID
+- `POST /api/ItemsApi` — Create a new item
+  - Request body: `{ name, price, categoryId, clientId }`
+  - Auto-generates serial number
+- `PUT /api/ItemsApi/{id}` — Update an existing item
+- `DELETE /api/ItemsApi/{id}` — Delete an item
+
+#### Categories API (`/api/CategoriesApi`)
+
+- `GET /api/CategoriesApi` — Get all categories
+- `GET /api/CategoriesApi/{id}` — Get a single category by ID
+
+#### Clients API (`/api/ClientsApi`)
+
+- `GET /api/ClientsApi` — Get all clients
+- `GET /api/ClientsApi/{id}` — Get a single client by ID
+
+### MVC Endpoints (Razor Views)
+
+#### ItemsController
 
 - `GET /Items` — List all items (Index view)
 - `GET /Items/Create` — Show form to create a new item
@@ -159,12 +201,47 @@ This project exposes several endpoints via its controllers. The main endpoints a
 - `GET /Items/Delete/{id}` — Show confirmation to delete an item
 - `POST /Items/Delete/{id}` — Delete an item
 
+---
 
-All endpoints return HTML views by default, but you can adapt them for API-style responses if needed.
+## Technologies Used
+
+### Backend
+
+- **ASP.NET Core 9.0** - Web framework
+- **Entity Framework Core 8.0.7** - ORM for database operations
+- **SQL Server** - Database
+- **C# 12** - Programming language
+
+### Frontend
+
+- **Angular 20** - Frontend framework
+- **TypeScript** - Type-safe JavaScript
+- **Tailwind CSS** - Utility-first CSS framework
+- **RxJS** - Reactive programming library
+- **HttpClient** - HTTP communication with backend API
+
+### Features
+
+- ✅ RESTful API with JSON responses
+- ✅ CORS enabled for cross-origin requests
+- ✅ JSON cycle handling for entity relationships
+- ✅ Responsive design (mobile-friendly)
+- ✅ Loading states and error handling
+- ✅ Form validation
+- ✅ Confirmation dialogs for destructive actions
 
 ---
 
 ## How to Run the Project
+
+### Prerequisites
+
+- .NET 9 SDK
+- SQL Server or SQL Server Express
+- Node.js (v18 or higher)
+- Angular CLI (`npm install -g @angular/cli`)
+
+### Setup Steps
 
 1. **Clone the repository:**
 
@@ -184,18 +261,327 @@ All endpoints return HTML views by default, but you can adapt them for API-style
 
 3. **Apply migrations and create the database:**
 
-   - Open a terminal in the `MyApp` directory and run:
-     ```sh
-     dotnet ef database update
-     ```
+   ```sh
+   cd MyApp
+   dotnet ef database update
+   ```
 
-4. **Run the application:**
-   - In the `MyApp` directory, run:
-     ```sh
-     dotnet run
-     ```
-   - The app will start on `https://localhost:5001` or a similar port. Open it in your browser.
+4. **Run the backend:**
+
+   ```powershell
+   cd MyApp
+   dotnet run
+   ```
+
+   - Backend runs on: `https://localhost:7114` and `http://localhost:5114`
+
+5. **Install frontend dependencies:**
+
+   ```powershell
+   cd frontend\frontend
+   npm install
+   ```
+
+6. **Run the Angular frontend:**
+
+   ```powershell
+   cd frontend\frontend
+   ng serve --open
+   ```
+
+   - Frontend runs on: `http://localhost:4200`
+   - Automatically opens in your default browser
+
+### Quick Start Commands
+
+**Terminal 1 - Backend:**
+
+```powershell
+cd C:\path\to\MyApp-NET-MVC\MyApp
+dotnet run
+```
+
+**Terminal 2 - Frontend:**
+
+```powershell
+cd C:\path\to\MyApp-NET-MVC\frontend\frontend
+ng serve --open
+```
+
+Access the application at `http://localhost:4200`
 
 ---
 
-This project is a well-structured ASP.NET Core MVC application using .NET 9 and Entity Framework Core. It demonstrates the full MVC pattern, CRUD operations, Razor views, and all major types of entity relationships, making it a great learning resource for modern .NET web development.
+## Angular Frontend Architecture
+
+### Components
+
+#### ItemsListComponent
+
+- Displays all items in a responsive table
+- Shows Category, Serial Number, and associated Clients
+- Edit and Delete buttons for each item
+- Loading spinner and error handling
+- Empty state when no items exist
+
+#### ItemFormComponent
+
+- Reusable form for Create and Edit operations
+- Dropdown selections for Category and Client
+- Form validation with real-time feedback
+- Auto-navigation after successful save
+
+### Services
+
+#### ItemService
+
+- Handles all item-related API calls
+- Methods: `getItems()`, `getItem(id)`, `createItem()`, `updateItem()`, `deleteItem()`
+
+#### CategoryService
+
+- Fetches categories for dropdown selection
+
+#### ClientService
+
+- Fetches clients for dropdown selection
+
+### Routing
+
+- `/items` - Items list (default route)
+- `/items/create` - Create new item
+- `/items/edit/:id` - Edit existing item
+
+### Styling
+
+- **Tailwind CSS** for modern, utility-first styling
+- Responsive design with mobile-first approach
+- Custom color scheme with blue primary colors
+- Smooth transitions and hover effects
+
+---
+
+## Backend API Configuration
+
+### CORS Setup
+
+The backend is configured to accept requests from the Angular frontend:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy => policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
+
+app.UseCors("AllowAngular");
+```
+
+### JSON Serialization
+
+Configured to handle circular references in entity relationships:
+
+```csharp
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+```
+
+---
+
+## Troubleshooting
+
+### Backend Issues
+
+**Port already in use:**
+
+```powershell
+# Stop all dotnet processes
+Get-Process | Where-Object {$_.ProcessName -eq 'dotnet'} | Stop-Process -Force
+```
+
+**Database connection errors:**
+
+- Verify SQL Server is running
+- Check connection string in `appsettings.json`
+- Run `dotnet ef database update` to apply migrations
+
+### Frontend Issues
+
+**Port 4200 already in use:**
+
+```powershell
+# Use a different port
+ng serve --port 4201
+```
+
+**API CORS errors:**
+
+- Ensure backend is running
+- Verify CORS policy includes `http://localhost:4200`
+- Check browser console for detailed error messages
+
+**Module not found:**
+
+```powershell
+# Reinstall dependencies
+cd frontend\frontend
+npm install
+```
+
+---
+
+## Project Features
+
+### Implemented Features
+
+- ✅ Full CRUD operations for Items
+- ✅ Category management
+- ✅ Client management
+- ✅ Auto-generated serial numbers (CategoryName + ItemID)
+- ✅ One-to-One relationship (Item ↔ SerialNumber)
+- ✅ One-to-Many relationship (Category ↔ Items)
+- ✅ Many-to-Many relationship (Items ↔ Clients via ItemClient)
+- ✅ RESTful API with JSON responses
+- ✅ Angular frontend with Tailwind CSS
+- ✅ Responsive UI design
+- ✅ Form validation
+- ✅ Error handling and user feedback
+- ✅ Loading states
+
+### Future Enhancements
+
+- 🔲 Authentication and Authorization
+- 🔲 Pagination for large datasets
+- 🔲 Search and filter functionality
+- 🔲 Sorting capabilities
+- 🔲 File upload for item images
+- 🔲 Dashboard with statistics
+- 🔲 Unit and integration tests
+- 🔲 Docker containerization
+- 🔲 CI/CD pipeline
+
+---
+
+## Connecting to the .NET Backend
+
+The Angular frontend connects to the ASP.NET Core backend via HTTP services:
+
+1. **Backend API URLs** are configured in services:
+
+   ```typescript
+   private apiUrl = 'https://localhost:7114/api/ItemsApi';
+   ```
+
+2. **CORS is enabled** in the backend to accept requests from `http://localhost:4200`
+
+3. **HttpClient** is configured in `app.config.ts`:
+   ```typescript
+   providers: [provideHttpClient()];
+   ```
+
+### Optional: Proxy Configuration
+
+Create `proxy.conf.json` in the Angular project root:
+
+```json
+{
+  "/api": {
+    "target": "https://localhost:7114",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
+```
+
+Run with proxy:
+
+```powershell
+ng serve --proxy-config proxy.conf.json
+```
+
+---
+
+## Project Summary
+
+This is a modern full-stack web application demonstrating:
+
+### Backend Architecture
+
+- **ASP.NET Core MVC** for traditional server-rendered views
+- **RESTful Web API** for modern SPA communication
+- **Entity Framework Core** with Code-First migrations
+- **SQL Server** database with complex relationships
+- **JSON serialization** with cycle handling
+- **CORS configuration** for cross-origin API access
+
+### Frontend Architecture
+
+- **Angular 20** with standalone components
+- **Tailwind CSS** for modern, responsive UI
+- **TypeScript** for type-safe development
+- **RxJS** for reactive data handling
+- **HttpClient** for API communication
+- **Angular Router** for SPA navigation
+
+### Learning Outcomes
+
+This project demonstrates:
+
+- Full-stack development with .NET and Angular
+- RESTful API design and implementation
+- Entity relationships and database design
+- CRUD operations in both MVC and API patterns
+- Modern frontend development with Angular
+- Responsive UI design with Tailwind CSS
+- Cross-origin resource sharing (CORS)
+- JSON serialization challenges and solutions
+
+### Use Cases
+
+- Inventory management system
+- Product catalog with categories
+- Client relationship management
+- Serial number tracking
+- Learning modern web development patterns
+
+---
+
+## License
+
+This project is for educational purposes. Feel free to use and modify as needed.
+
+---
+
+## Contact
+
+**Repository:** https://github.com/mandinumaneth/MyApp-NET-MVC  
+**Author:** mandinumaneth
+
+---
+
+## Screenshots
+
+### Items List View
+
+- Responsive table with all item details
+- Category tags and client associations
+- Edit and Delete actions
+
+### Create/Edit Form
+
+- Clean form layout
+- Dropdown selections
+- Validation feedback
+- Loading states
+
+### Navigation
+
+- Modern navigation bar
+- Active route highlighting
+- Responsive design
