@@ -6,6 +6,7 @@
 - Angular CLI installed
 - Tailwind CSS configured
 - .NET Backend API created with CORS enabled
+- PostgreSQL database configured
 
 ## Quick Start
 
@@ -16,7 +17,7 @@ cd C:\Users\ASUS\Documents\GitHub\MyApp-NET-MVC\MyApp
 dotnet run
 ```
 
-The backend will run on `https://localhost:5001`
+The backend will run on `http://localhost:5114` and `https://localhost:7114`
 
 ### 2. Start the Angular Frontend
 
@@ -39,19 +40,24 @@ Navigate to `http://localhost:4200`
 - ✅ Create Item form with validation
 - ✅ Edit Item functionality
 - ✅ Delete Item with confirmation
+- ✅ Client Management page (add/delete clients)
 - ✅ Category and Client selection dropdowns
 - ✅ Beautiful Tailwind CSS styling
 - ✅ Loading states and error handling
-- ✅ Navigation bar
+- ✅ Navigation bar with Items and Clients tabs
 - ✅ Responsive design
+- ✅ Price display in LKR currency
 
 ### Backend (.NET 9)
 
 - ✅ API Controllers for Items, Categories, and Clients
+- ✅ Full CRUD operations for Items and Clients
 - ✅ CORS enabled for Angular frontend
 - ✅ Full CRUD operations
 - ✅ Entity relationships (One-to-One, One-to-Many, Many-to-Many)
 - ✅ Auto-generated serial numbers
+- ✅ PostgreSQL database with EF Core migrations
+- ✅ Cascade deletion handling
 
 ## Project Structure
 
@@ -59,13 +65,14 @@ Navigate to `http://localhost:4200`
 frontend/frontend/
 ├── src/
 │   ├── app/
-│   │   ├── components/
-│   │   │   ├── items-list/        # Items list view
-│   │   │   └── item-form/         # Create/Edit form
-│   │   ├── services/
-│   │   │   ├── item.service.ts    # Item API calls
-│   │   │   ├── category.service.ts
-│   │   │   └── client.service.ts
+    │   ├── components/
+    │   │   ├── items-list/        # Items list view
+    │   │   ├── item-form/         # Create/Edit form
+    │   │   └── client-management/ # Client management page
+    │   ├── services/
+    │   │   ├── item.service.ts    # Item API calls
+    │   │   ├── category.service.ts
+    │   │   └── client.service.ts   # Client API calls (full CRUD)
 │   │   ├── models/
 │   │   │   └── item.model.ts      # TypeScript interfaces
 │   │   ├── app.routes.ts          # Routing configuration
@@ -84,6 +91,8 @@ frontend/frontend/
 
 - GET `/api/CategoriesApi` - Get all categories
 - GET `/api/ClientsApi` - Get all clients
+- POST `/api/ClientsApi` - Create new client
+- DELETE `/api/ClientsApi/{id}` - Delete client
 
 ## Troubleshooting
 
@@ -105,15 +114,15 @@ app.UseCors("AllowAngular");
 
 ### SSL Certificate Issues
 
-If you get SSL errors, the backend API URLs in services use `https://localhost:5001`. Make sure your .NET app is running with HTTPS enabled.
+If you get SSL errors, the backend API URLs in services use `https://localhost:7114`. You can also use `http://localhost:5114` for HTTP. Make sure your .NET app is running.
 
 ### Database Connection
 
-Ensure SQL Server is running and the connection string in `appsettings.json` is correct:
+Ensure PostgreSQL is running and the connection string in `appsettings.json` is correct:
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnectionString": "Data Source=localhost\\SQLEXPRESS;Initial Catalog=myapp_database;Integrated Security=True;TrustServerCertificate=True;"
+  "DefaultConnectionString": "Host=localhost;Port=5432;Database=myapp_database;Username=postgres;Password=your_password"
 }
 ```
 
@@ -134,9 +143,12 @@ You can extend this application by:
 - Adding file upload for item images
 - Implementing real-time updates with SignalR
 - Adding unit and integration tests
+- Exporting data to Excel/PDF
+- Bulk operations for items and clients
 
 ## Technologies Used
 
 - **Frontend**: Angular 20, TypeScript, Tailwind CSS, RxJS
-- **Backend**: ASP.NET Core 9, Entity Framework Core, SQL Server
+- **Backend**: ASP.NET Core 9, Entity Framework Core 9.0.1, PostgreSQL
+- **Database**: PostgreSQL with Npgsql provider
 - **API**: RESTful Web API with JSON

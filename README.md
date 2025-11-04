@@ -1,6 +1,8 @@
 ## MyApp - ASP.NET Core MVC Learning Project
 
-This project is a comprehensive learning exercise for ASP.NET Core MVC, built with .NET 9. It demonstrates the core concepts of the MVC pattern, Entity Framework Core (Code-First and Database-First), CRUD operations, and different types of relationships between entities.
+This is a **learning project** designed to understand and practice ASP.NET Core MVC concepts with .NET 9. It demonstrates the core concepts of the MVC pattern, Entity Framework Core (Code-First approach), CRUD operations, and different types of relationships between entities.
+
+**Purpose:** Educational project for learning full-stack web development with .NET and Angular.
 
 ---
 
@@ -57,10 +59,11 @@ This is a full-stack application combining ASP.NET Core MVC backend with an Angu
 - `src/app/components/`: Angular components
   - `items-list/`: Display all items in a table
   - `item-form/`: Create and edit items form
+  - `client-management/`: Manage clients (add/delete)
 - `src/app/services/`: HTTP services for API communication
   - `item.service.ts`: Item CRUD operations
   - `category.service.ts`: Category data
-  - `client.service.ts`: Client data
+  - `client.service.ts`: Client CRUD operations
 - `src/app/models/`: TypeScript interfaces matching backend models
 - `tailwind.config.js`: Tailwind CSS configuration
 - `src/styles.css`: Global styles with Tailwind directives
@@ -188,6 +191,9 @@ This is a full-stack application combining ASP.NET Core MVC backend with an Angu
 
 - `GET /api/ClientsApi` — Get all clients
 - `GET /api/ClientsApi/{id}` — Get a single client by ID
+- `POST /api/ClientsApi` — Create a new client
+  - Request body: `{ name }`
+- `DELETE /api/ClientsApi/{id}` — Delete a client
 
 ### MVC Endpoints (Razor Views)
 
@@ -208,8 +214,9 @@ This is a full-stack application combining ASP.NET Core MVC backend with an Angu
 ### Backend
 
 - **ASP.NET Core 9.0** - Web framework
-- **Entity Framework Core 8.0.7** - ORM for database operations
-- **SQL Server** - Database
+- **Entity Framework Core 9.0.1** - ORM for database operations
+- **PostgreSQL** - Database (migrated from SQL Server)
+- **Npgsql 9.0.4** - PostgreSQL provider for EF Core
 - **C# 12** - Programming language
 
 ### Frontend
@@ -237,7 +244,7 @@ This is a full-stack application combining ASP.NET Core MVC backend with an Angu
 ### Prerequisites
 
 - .NET 9 SDK
-- SQL Server or SQL Server Express
+- PostgreSQL (version 12 or higher)
 - Node.js (v18 or higher)
 - Angular CLI (`npm install -g @angular/cli`)
 
@@ -252,10 +259,10 @@ This is a full-stack application combining ASP.NET Core MVC backend with an Angu
 
 2. **Configure the database connection:**
 
-   - Edit `MyApp/appsettings.json` if needed. By default, it uses SQL Server Express:
+   - Edit `MyApp/appsettings.json` with your PostgreSQL credentials:
      ```json
      "ConnectionStrings": {
-       "DefaultConnectionString": "Data Source=localhost\\SQLEXPRESS;Initial Catalog=myapp_database;Integrated Security=True;TrustServerCertificate=True;"
+       "DefaultConnectionString": "Host=localhost;Port=5432;Database=myapp_database;Username=postgres;Password=your_password"
      }
      ```
 
@@ -344,13 +351,15 @@ Access the application at `http://localhost:4200`
 
 #### ClientService
 
-- Fetches clients for dropdown selection
+- Handles all client-related API calls
+- Methods: `getClients()`, `getClient(id)`, `createClient()`, `deleteClient(id)`
 
 ### Routing
 
 - `/items` - Items list (default route)
 - `/items/create` - Create new item
 - `/items/edit/:id` - Edit existing item
+- `/clients` - Client management page
 
 ### Styling
 
@@ -407,8 +416,9 @@ Get-Process | Where-Object {$_.ProcessName -eq 'dotnet'} | Stop-Process -Force
 
 **Database connection errors:**
 
-- Verify SQL Server is running
+- Verify PostgreSQL is running (check services or run `pg_isready`)
 - Check connection string in `appsettings.json`
+- Ensure PostgreSQL user has necessary permissions
 - Run `dotnet ef database update` to apply migrations
 
 ### Frontend Issues
@@ -441,8 +451,9 @@ npm install
 ### Implemented Features
 
 - ✅ Full CRUD operations for Items
+- ✅ Full CRUD operations for Clients (add/delete)
 - ✅ Category management
-- ✅ Client management
+- ✅ Client selection when creating/editing items
 - ✅ Auto-generated serial numbers (CategoryName + ItemID)
 - ✅ One-to-One relationship (Item ↔ SerialNumber)
 - ✅ One-to-Many relationship (Category ↔ Items)
@@ -453,6 +464,8 @@ npm install
 - ✅ Form validation
 - ✅ Error handling and user feedback
 - ✅ Loading states
+- ✅ Price display in LKR (Sri Lankan Rupees)
+- ✅ PostgreSQL database with migrations
 
 ### Future Enhancements
 
@@ -516,7 +529,7 @@ This is a modern full-stack web application demonstrating:
 - **ASP.NET Core MVC** for traditional server-rendered views
 - **RESTful Web API** for modern SPA communication
 - **Entity Framework Core** with Code-First migrations
-- **SQL Server** database with complex relationships
+- **PostgreSQL** database with complex relationships
 - **JSON serialization** with cycle handling
 - **CORS configuration** for cross-origin API access
 
@@ -541,47 +554,8 @@ This project demonstrates:
 - Responsive UI design with Tailwind CSS
 - Cross-origin resource sharing (CORS)
 - JSON serialization challenges and solutions
-
-### Use Cases
-
-- Inventory management system
-- Product catalog with categories
-- Client relationship management
-- Serial number tracking
-- Learning modern web development patterns
+- PostgreSQL database integration with Entity Framework Core
+- Migration management and database versioning
 
 ---
 
-## License
-
-This project is for educational purposes. Feel free to use and modify as needed.
-
----
-
-## Contact
-
-**Repository:** https://github.com/mandinumaneth/MyApp-NET-MVC  
-**Author:** mandinumaneth
-
----
-
-## Screenshots
-
-### Items List View
-
-- Responsive table with all item details
-- Category tags and client associations
-- Edit and Delete actions
-
-### Create/Edit Form
-
-- Clean form layout
-- Dropdown selections
-- Validation feedback
-- Loading states
-
-### Navigation
-
-- Modern navigation bar
-- Active route highlighting
-- Responsive design
