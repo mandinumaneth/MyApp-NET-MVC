@@ -1,6 +1,6 @@
 ﻿@model List<MyApp.Models.Item>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "";
 }
 
 
@@ -22,7 +22,7 @@
         {
             <tr>
                 <td>@item.Name</td>
-                <td>@item.Price.ToString("N2") $</td>
+                <td>LKR @item.Price.ToString("N2")</td>
                 <td>@(item.SerialNumber?.Name ?? "None")</td>
                 <td>@(item.Category?.Name ?? "None")</td>
                 <td>

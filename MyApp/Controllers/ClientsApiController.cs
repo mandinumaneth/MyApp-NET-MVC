@@ -36,5 +36,37 @@ namespace MyApp.Controllers
 
             return client;
         }
+
+        // POST: api/ClientsApi
+        [HttpPost]
+        public async Task<ActionResult<Client>> PostClient(Client client)
+        {
+            _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetClient), new { id = client.Id }, client);
+        }
+
+        // DELETE: api/ClientsApi/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClient(int id)
+        {
+            var client = await _context.Clients.FindAsync(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            // Remove associated ItemClient records first
+            var itemClients = await _context.ItemClients.Where(ic => ic.ClientId == id).ToListAsync();
+            _context.ItemClients.RemoveRange(itemClients);
+            await _context.SaveChangesAsync();
+
+            // Remove the client
+            _context.Clients.Remove(client);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
