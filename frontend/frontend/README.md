@@ -2,6 +2,36 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
 
+## 🔒 Authentication
+
+This Angular application uses **Auth0** for authentication. All routes are protected by `authGuard` and require users to log in.
+
+### Auth0 Configuration
+
+Before running the application, configure Auth0 settings in `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  auth0: {
+    domain: 'your-tenant.us.auth0.com',
+    clientId: 'your-client-id',
+    authorizationParams: {
+      audience: 'https://myapp-api',
+      redirect_uri: window.location.origin,
+    },
+    httpInterceptor: {
+      allowedList: ['http://localhost:5114/api/*', 'https://localhost:7114/api/*'],
+    },
+  },
+};
+```
+
+### Authentication Components
+
+- **AuthButtonComponent** - Login/logout button with user profile
+- **UserProfileComponent** - View user info, permissions, roles, and JWT token
+- **authGuard** - Protects all routes from unauthorized access
+
 ## Development server
 
 To start a local development server, run:
