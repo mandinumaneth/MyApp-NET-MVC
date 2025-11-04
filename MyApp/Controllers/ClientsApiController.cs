@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
 using MyApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClientsApiController : ControllerBase
     {
         private readonly MyAppContext _context;
@@ -18,6 +20,7 @@ namespace MyApp.Controllers
 
         // GET: api/ClientsApi
         [HttpGet]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
             return await _context.Clients.ToListAsync();
@@ -25,6 +28,7 @@ namespace MyApp.Controllers
 
         // GET: api/ClientsApi/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "read:clients")]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
             var client = await _context.Clients.FindAsync(id);
@@ -39,6 +43,7 @@ namespace MyApp.Controllers
 
         // POST: api/ClientsApi
         [HttpPost]
+        [Authorize(Policy = "write:clients")]
         public async Task<ActionResult<Client>> PostClient(Client client)
         {
             _context.Clients.Add(client);
@@ -49,6 +54,7 @@ namespace MyApp.Controllers
 
         // DELETE: api/ClientsApi/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "delete:clients")]
         public async Task<IActionResult> DeleteClient(int id)
         {
             var client = await _context.Clients.FindAsync(id);

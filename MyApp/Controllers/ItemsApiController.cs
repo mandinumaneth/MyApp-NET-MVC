@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
 using MyApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ItemsApiController : ControllerBase
     {
         private readonly MyAppContext _context;
@@ -18,6 +20,7 @@ namespace MyApp.Controllers
 
         // GET: api/ItemsApi
         [HttpGet]
+        [Authorize(Policy = "read:items")]
         public async Task<ActionResult<IEnumerable<Item>>> GetItems()
         {
             var items = await _context.Items
@@ -31,6 +34,7 @@ namespace MyApp.Controllers
 
         // GET: api/ItemsApi/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "read:items")]
         public async Task<ActionResult<Item>> GetItem(int id)
         {
             var item = await _context.Items
@@ -50,6 +54,7 @@ namespace MyApp.Controllers
 
         // POST: api/ItemsApi
         [HttpPost]
+        [Authorize(Policy = "write:items")]
         public async Task<ActionResult<Item>> CreateItem([FromBody] ItemCreateDto itemDto)
         {
             var item = new Item
@@ -87,6 +92,7 @@ namespace MyApp.Controllers
 
         // PUT: api/ItemsApi/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "write:items")]
         public async Task<IActionResult> UpdateItem(int id, [FromBody] ItemCreateDto itemDto)
         {
             var item = await _context.Items.FindAsync(id);
@@ -120,6 +126,7 @@ namespace MyApp.Controllers
 
         // DELETE: api/ItemsApi/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "delete:items")]
         public async Task<IActionResult> DeleteItem(int id)
         {
             var item = await _context.Items.FindAsync(id);
